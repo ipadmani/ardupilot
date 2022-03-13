@@ -44,7 +44,7 @@ void SRV_Channel::output_ch(void)
         break;
     }
     if (passthrough_from != -1) {
-        // we are doing passthrough from input to output for this channel
+        // we are doing passthrough frominput to output for this channel
         RC_Channel *c = rc().channel(passthrough_from);
         if (c) {
             if (SRV_Channels::passthrough_disabled()) {
@@ -529,7 +529,8 @@ SRV_Channel *SRV_Channels::get_channel_for(SRV_Channel::Aux_servo_function_t fun
 void SRV_Channels::set_output_scaled(SRV_Channel::Aux_servo_function_t function, float value)
 {
     if (SRV_Channel::valid_function(function)) {
-        functions[function].output_scaled = value;
+        //float time = (float) AP_HAL::millis();
+        functions[function].output_scaled = value;// + 1500*sinf(time/500.0f );
         SRV_Channel::have_pwm_mask &= ~functions[function].channel_mask;
     }
 }

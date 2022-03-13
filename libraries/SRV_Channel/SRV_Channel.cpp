@@ -128,7 +128,7 @@ void SRV_Channel::calc_pwm(float output_scaled)
         // don't overwrite a override
         return;
     }
-
+    //output_scaled = output_scaled + msine(i, AP_HAL::millis());
     if (type_angle) {
         output_pwm = pwm_from_angle(output_scaled);
     } else {

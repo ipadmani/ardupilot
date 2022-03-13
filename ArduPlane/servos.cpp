@@ -810,7 +810,6 @@ void Plane::set_servos(void)
     // servos_output(), which is run from all code paths in this
     // function
     SRV_Channels::cork();
-    
     // this is to allow the failsafe module to deliberately crash 
     // the plane. Only used in extreme circumstances to meet the
     // OBC rules
@@ -954,6 +953,7 @@ void Plane::landing_neutral_control_surface_servos(void)
 void Plane::servos_output(void)
 {
     SRV_Channels::cork();
+    SRV_Channels::set_cork_time(AP_HAL::millis());
 
     // support twin-engine aircraft
     servos_twin_engine_mix();

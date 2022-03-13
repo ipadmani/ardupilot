@@ -1,4 +1,19 @@
 {
     "cSpell.language": "en-GB",
-    "astyle.astylerc": "${workspaceFolder}/Tools/CodeStyle/astylerc"
+    "astyle.astylerc": "${workspaceFolder}/Tools/CodeStyle/astylerc",
+    "files.associations": {
+        "*.tcc": "cpp",
+        "bitset": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "fstream": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "streambuf": "cpp",
+        "functional": "cpp",
+        "regex": "cpp"
+    },
+    "C_Cpp.dimInactiveRegions": false
 }

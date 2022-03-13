@@ -515,6 +515,12 @@ public:
     
     static void cork();
 
+    static float corkTime;
+
+    static void set_cork_time(uint32_t t);
+
+    static float get_cork_time();
+
     static void push();
 
     // disable output to a set of channels given by a mask. This is used by the AP_BLHeli code
@@ -551,6 +557,7 @@ public:
     static bool is_GPIO(uint8_t channel);
 
 private:
+
 
     static bool disabled_passthrough;
 
@@ -609,6 +616,8 @@ private:
         // scaled output for this function
         float output_scaled;
     } functions[SRV_Channel::k_nr_aux_servo_functions];
+
+    
 
     AP_Int8 auto_trim;
     AP_Int16 default_rate;
