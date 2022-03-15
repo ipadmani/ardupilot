@@ -146,3 +146,15 @@ dumpstack_*out
 build.tmp.binaries/
 tasklist.json
 modules/esp_idf
+modules/ChibiOS
+modules/waf
+modules/uavcan
+modules/mavlink
+modules/gtest
+modules/gsoap
+modules/gbenchmark
+modules/DroneCAN/pydronecan
+modules/DroneCAN/libcanard
+modules/DroneCAN/DSDL
+modules/CrashDebug
+modules/ChibiOS
