@@ -158,3 +158,12 @@ modules/DroneCAN/libcanard
 modules/DroneCAN/DSDL
 modules/CrashDebug
 modules/ChibiOS
+modules/ChibiOS
+modules/ChibiOS
+modules/CrashDebug
+modules/DroneCAN/DSDL
+modules/DroneCAN/libcanard
+modules/DroneCAN/pydronecan
+modules/gbenchmark
+modules/gsoap
+modules/gtest
