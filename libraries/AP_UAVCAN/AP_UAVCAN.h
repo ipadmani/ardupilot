@@ -35,7 +35,7 @@
 
 
 #ifndef UAVCAN_SRV_NUMBER
-#define UAVCAN_SRV_NUMBER 18
+#define UAVCAN_SRV_NUMBER 32
 #endif
 
 #define AP_UAVCAN_SW_VERS_MAJOR 1
