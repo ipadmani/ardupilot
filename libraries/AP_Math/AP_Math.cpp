@@ -479,3 +479,40 @@ float degF_to_Kelvin(float temp_f)
 {
     return (temp_f + 459.67) * 0.55556;
 }
+
+
+float msine(int i, float t) //generate multisine signal
+{
+    float freq[20] = {0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f, 1.1f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f, 1.7f, 1.8f, 1.9f, 2.0f};
+    float ph[20] = {0.951289023f,
+    -1.481148744f,
+    1.961369573f,
+    2.313955759f,
+    2.771354451f,
+    2.406922161f,
+    -0.547934804f,
+    -2.161003901f,
+    2.094941648f,
+    -1.877646194f,
+    -2.999289586f,
+    -1.548548641f,
+    0.136407847f,
+    -0.2181714f,
+    -2.670644012f,
+    -2.081820644f,
+    1.732275466f,
+    2.907113816f,
+    -2.396380326f,
+    1.937535304f};
+    float ret = 0.0f;
+    float time = (float) t;
+    time = time/1000.0f;
+    for (uint8_t j=0; j<20; j++) {
+        //ret += 125.0f*sinf(2.0f*3.141592f*freq[j]*time+ph[j]) ;
+        ret +=sinf(2.0f*3.141592f*freq[j]*time+ph[j]) ;
+    }
+    return ret;
+}
+
+
+

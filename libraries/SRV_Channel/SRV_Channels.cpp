@@ -21,6 +21,8 @@
 #include <AP_Math/AP_Math.h>
 #include <AP_Vehicle/AP_Vehicle.h>
 #include "SRV_Channel.h"
+#include <RC_Channel/RC_Channel.h>
+
 
 #if HAL_MAX_CAN_PROTOCOL_DRIVERS
   #include <AP_CANManager/AP_CANManager.h>
@@ -42,6 +44,7 @@ extern const AP_HAL::HAL& hal;
 
 SRV_Channel *SRV_Channels::channels;
 SRV_Channels *SRV_Channels::_singleton;
+float SRV_Channels::corkTime;
 
 #ifndef HAL_BUILD_AP_PERIPH
 AP_Volz_Protocol *SRV_Channels::volz_ptr;
@@ -70,6 +73,7 @@ bool SRV_Channels::emergency_stop;
 Bitmask<SRV_Channel::k_nr_aux_servo_functions> SRV_Channels::function_mask;
 SRV_Channels::srv_function SRV_Channels::functions[SRV_Channel::k_nr_aux_servo_functions];
 SRV_Channels::slew_list *SRV_Channels::_slew;
+
 
 const AP_Param::GroupInfo SRV_Channels::var_info[] = {
 #if (NUM_SERVO_CHANNELS >= 1)
@@ -342,6 +346,7 @@ SRV_Channels::SRV_Channels(void)
 {
     _singleton = this;
     channels = obj_channels;
+    SRV_Channels::corkTime = 0.0f;
 
     // set defaults from the parameter table
     AP_Param::setup_object_defaults(this, var_info);
@@ -431,7 +436,22 @@ void SRV_Channels::calc_pwm(void)
             override_counter[i]--;
         }
         if (channels[i].valid_function()) {
-            channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled);
+            //channels[i].calc_pwm(sinf(AP_HAL::millis()/1000));
+            if (RC_Channels::get_radio_in(7) > 1500) { //radio channel = input +1; i.e. the arg 7 = channel 8 on radio
+                if(channels[i].should_e_stop(channels[i].get_function())){
+                    if(RC_Channels::get_radio_in(2) > 1100) { //need to make this an arming bool
+                        channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-900)/500.0f*msine(i, SRV_Channels::get_cork_time())); //add multisine function
+                    } else {
+                        channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled);
+                    }
+                } else {
+                    channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-900)/500.0f*125.0f*msine(i, SRV_Channels::get_cork_time())); //add multisine function
+                }
+            } else {
+                channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled);
+            }
+            
+            //channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled);
         }
     }
 }
@@ -584,4 +604,12 @@ bool SRV_Channels::is_GPIO(uint8_t channel)
         return true;
     }
     return false;
+}
+
+void SRV_Channels::set_cork_time(uint32_t t) {
+    corkTime = (float) t;
+}
+
+float SRV_Channels::get_cork_time() {
+    return corkTime;
 }
