@@ -45,6 +45,7 @@ extern const AP_HAL::HAL& hal;
 SRV_Channel *SRV_Channels::channels;
 SRV_Channels *SRV_Channels::_singleton;
 float SRV_Channels::corkTime;
+float SRV_Channels::switchTime;
 
 #ifndef HAL_BUILD_AP_PERIPH
 AP_Volz_Protocol *SRV_Channels::volz_ptr;
@@ -347,6 +348,7 @@ SRV_Channels::SRV_Channels(void)
     _singleton = this;
     channels = obj_channels;
     SRV_Channels::corkTime = 0.0f;
+    SRV_Channels::switchTime = 0.0f;
 
     // set defaults from the parameter table
     AP_Param::setup_object_defaults(this, var_info);
@@ -438,17 +440,21 @@ void SRV_Channels::calc_pwm(void)
         if (channels[i].valid_function()) {
             //channels[i].calc_pwm(sinf(AP_HAL::millis()/1000));
             if (RC_Channels::get_radio_in(7) > 1500) { //radio channel = input +1; i.e. the arg 7 = channel 8 on radio
+                if(SRV_Channels::get_switch_time() < 1.0f) {
+                    SRV_Channels::set_switch_time(AP_HAL::millis());
+                }
                 if(channels[i].should_e_stop(channels[i].get_function())){
                     if(RC_Channels::get_radio_in(2) > 1100) { //need to make this an arming bool
-                        channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-900)/500.0f*msine(i, SRV_Channels::get_cork_time())); //add multisine function
+                        channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-900)/500.0f*msine(i, SRV_Channels::get_cork_time() - SRV_Channels::get_switch_time())); //add multisine function
                     } else {
                         channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled);
                     }
                 } else {
-                    channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-900)/500.0f*125.0f*msine(i, SRV_Channels::get_cork_time())); //add multisine function
+                    channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-900)/500.0f*125.0f*msine(i, SRV_Channels::get_cork_time() - SRV_Channels::get_switch_time())); //add multisine function
                 }
             } else {
                 channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled);
+                SRV_Channels::set_switch_time(0.0f);
             }
             
             //channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled);
@@ -612,4 +618,12 @@ void SRV_Channels::set_cork_time(uint32_t t) {
 
 float SRV_Channels::get_cork_time() {
     return corkTime;
+}
+
+void SRV_Channels::set_switch_time(uint32_t t) {
+    switchTime = (float) t;
+}
+
+float SRV_Channels::get_switch_time() {
+    return switchTime;
 }

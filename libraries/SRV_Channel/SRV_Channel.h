@@ -524,9 +524,15 @@ public:
 
     static float corkTime;
 
+    static float switchTime;
+
     static void set_cork_time(uint32_t t);
 
     static float get_cork_time();
+
+    static float get_switch_time();
+
+    static void set_switch_time(uint32_t t);
 
     static void push();
 
