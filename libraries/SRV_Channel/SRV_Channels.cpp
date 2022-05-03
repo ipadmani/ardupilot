@@ -445,12 +445,12 @@ void SRV_Channels::calc_pwm(void)
                 }
                 if(channels[i].should_e_stop(channels[i].get_function())){
                     if(RC_Channels::get_radio_in(2) > 1100) { //need to make this an arming bool
-                        channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-1077)/500.0f*msine(i, SRV_Channels::get_cork_time() - SRV_Channels::get_switch_time())); //add multisine function
+                        channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-1077)/500.0f*15.0f*msine(i, SRV_Channels::get_cork_time() - SRV_Channels::get_switch_time())); //add multisine function
                     } else {
                         channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled);
                     }
                 } else {
-                    channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-1077)/500.0f*125.0f*msine(i, SRV_Channels::get_cork_time() - SRV_Channels::get_switch_time())); //add multisine function
+                    channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled + (RC_Channels::get_radio_in(6)-1077)/500.0f*25.0f*msine(i, SRV_Channels::get_cork_time() - SRV_Channels::get_switch_time())); //add multisine function
                 }
             } else {
                 channels[i].calc_pwm(functions[channels[i].function.get()].output_scaled);
